@@ -9,10 +9,20 @@
         android:id="@+id/photosFragment"
         android:name="com.deneb.unsplashapp.features.photos.PhotosFragment"
         android:label="fragment_photos"
-        tools:layout="@layout/fragment_photos" />
+        tools:layout="@layout/fragment_photos">
+        <!--        Aquí he añadido la acción de viajar desde el fragment del listado al del detalle-->
+        <action
+            android:id="@+id/action_open_photo_detail"
+            app:destination="@id/detailPhotoFragment"/>
+    </fragment>
     <fragment
         android:id="@+id/detailPhotoFragment"
         android:name="com.deneb.unsplashapp.features.photos.DetailPhotoFragment"
         android:label="fragment_detail_photo"
-        tools:layout="@layout/fragment_detail_photo" />
+        tools:layout="@layout/fragment_detail_photo">
+        <!--        Aquí he añadido el argumento que tiene que recibir la vista detalle en la acción creada más arriba-->
+        <argument
+            android:name="photo"
+            app:argType="com.deneb.unsplashapp.features.photos.model.UnsplashItemView" />
+    </fragment>
 </navigation>

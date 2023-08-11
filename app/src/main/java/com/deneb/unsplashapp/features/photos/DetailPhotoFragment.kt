@@ -13,11 +13,15 @@ import com.deneb.unsplashapp.databinding.FragmentDetailPhotoBinding
 import com.deneb.unsplashapp.features.photos.model.UnsplashDetailView
 import com.deneb.unsplashapp.features.photos.model.UnsplashItemView
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 
 @AndroidEntryPoint
 class DetailPhotoFragment :
     BaseFragment<FragmentDetailPhotoBinding>(FragmentDetailPhotoBinding::inflate) {
     private val photoDetailsViewModel by viewModels<PhotosDetailViewModel>()
+    //Aquí obtengo los argumentos pasados por safeargs
+    private val args: DetailPhotoFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,8 +38,9 @@ class DetailPhotoFragment :
 
     private fun loadPhotoDetail() {
         showProgress()
+        //aquí uso el id del argumento pasado por safeargs para pedir el detalle de la foto
         photoDetailsViewModel.loadPhotoDetails(
-            arguments?.getParcelable<UnsplashItemView>("photo")?.id ?: ""
+            args.photo.id
         )
     }
 
@@ -47,17 +52,21 @@ class DetailPhotoFragment :
     }
 
     private fun bindCamera(unsplashDetailView: UnsplashDetailView?) {
-        binding.cameraModel.text = unsplashDetailView?.exif?.model
-        binding.cameraIso.text = "ISO: ${unsplashDetailView?.exif?.iso}"
-        binding.cameraAperture.text = "Aperture: ${unsplashDetailView?.exif?.aperture}"
+        with(binding) {
+            cameraModel.text = unsplashDetailView?.exif?.model
+            cameraIso.text = "ISO: ${unsplashDetailView?.exif?.iso}"
+            cameraAperture.text = "Aperture: ${unsplashDetailView?.exif?.aperture}"
+        }
     }
 
     private fun bindUser(unsplashDetailView: UnsplashDetailView?) {
-        binding.imageDetail.loadFromUrl(unsplashDetailView?.image)
-        binding.circleImageProfile.loadFromUrl(unsplashDetailView?.user?.profileImage?.small)
-        binding.profileName.text =
-            "${unsplashDetailView?.user?.firstName} ${unsplashDetailView?.user?.lastName}"
-        binding.instagramName.text = unsplashDetailView?.user?.instagramUsername
+        with(binding) {
+            imageDetail.loadFromUrl(unsplashDetailView?.image)
+            circleImageProfile.loadFromUrl(unsplashDetailView?.user?.profileImage?.small)
+            profileName.text =
+                "${unsplashDetailView?.user?.firstName} ${unsplashDetailView?.user?.lastName}"
+            instagramName.text = unsplashDetailView?.user?.instagramUsername
+        }
     }
 
     private fun renderFailure(failure: Failure?) {
